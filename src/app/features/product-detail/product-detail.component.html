@@ -1,0 +1,83 @@
+<div class="container mt-4">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <a mat-icon-button routerLink="/dashboard" matTooltip="Torna alla dashboard" aria-label="Torna alla dashboard">
+          <mat-icon>arrow_back</mat-icon>
+        </a>
+        Dettaglio Prodotto
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content *ngIf="productForm" style="margin: 0 16px;">
+      <form [formGroup]="productForm">
+        <div class="row">
+          <div class="col-md-6">
+            <mat-form-field appearance="fill" class="w-100 mb-2">
+              <mat-label>Titolo Prodotto</mat-label>
+              <input matInput formControlName="title" placeholder="Titolo prodotto" required>
+              <mat-error *ngIf="productForm.get('title')?.hasError('required')">
+                Titolo obbligatorio.
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-6">
+            <mat-form-field appearance="fill" class="w-100 mb-2">
+              <mat-label>Categoria</mat-label>
+              <input matInput formControlName="category" placeholder="Categoria" required>
+              <mat-error *ngIf="productForm.get('category')?.hasError('required')">
+                Categoria obbligatoria.
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <mat-form-field appearance="fill" class="w-100">
+              <mat-label>Prezzo</mat-label>
+              <input matInput formControlName="price" type="number" placeholder="Prezzo Prodotto">
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-6">
+            <mat-form-field appearance="fill" class="w-100">
+              <mat-label>Impiegato</mat-label>
+              <input matInput formControlName="employee" placeholder="Nome Impiegato">
+            </mat-form-field>
+          </div>
+        </div>
+
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Descrizione</mat-label>
+          <textarea matInput formControlName="description" placeholder="Descrizione Prodotto" rows="5"></textarea>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Reviews</mat-label>
+
+          <mat-chip-list #chipList>
+            <mat-chip *ngFor="let review of reviews.controls; let i = index" (removed)="removeReview(i)">
+              {{ review.value }}
+              <button matChipRemove>
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip>
+          </mat-chip-list>
+          <input placeholder="Aggiungi una Review" [matChipInputFor]="chipList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="addReview($event)" />
+        </mat-form-field>
+
+        <div class="d-flex justify-content-between">
+          <button mat-raised-button color="primary" *ngIf="!isEditing" (click)="toggleEdit()" [disabled]="!isAdd"
+            [title]="!isAdd ? 'ToDo' : 'Salva Prodotto'">Salva</button>
+          <button mat-raised-button color="accent" *ngIf="isEditing" (click)="toggleEdit()">Modifica</button>
+
+          <button mat-stroked-button color="warn" type="button" routerLink="/dashboard"
+            title="Torna alla Dashboard">Annulla</button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

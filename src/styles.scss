@@ -1,0 +1,88 @@
+@import '~@angular/material/theming';
+$custom-primary: mat-palette($mat-teal, 500, 300, 700);
+$custom-accent: mat-palette($mat-pink);
+$custom-warn: mat-palette($mat-red);
+$custom-theme-light: mat-light-theme($custom-primary, $custom-accent, $custom-warn);
+
+// $sidebar-width: 55px;
+$sidebar-width: 140px;
+
+@include angular-material-theme($custom-theme-light);
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.sidenav-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+}
+
+.sidenav {
+  background: #009688;
+  margin-top: 64px;
+  transition: width 0.3s ease;
+}
+
+.sidenav[opened] {
+  width: $sidebar-width;
+}
+
+.content.opened{
+  margin-left: $sidebar-width;
+  transition: width 0.3s ease;
+}
+
+.sidenav:not([opened]) {
+  width: $sidebar-width;
+}
+
+.content:not(.opened) {
+  margin-left: 0;
+}
+
+.sidenav-content {
+  flex: 1;
+  overflow: auto;
+}
+
+.spacer {
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .sidenav {
+    width: 60px;
+  }
+
+  .sidenav-content {
+    padding: 10px;
+  }
+}
+
+.ellipsed {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: calc(2 * 1.5em);
+}
+
+.ellipsed2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  max-height: calc(2 * 1.5em);
+}
+
+
+input.mat-chip-input{
+  width: 100%!important;
+  padding: 10px!important;
+}
+.mat-form-field-appearance-fill .mat-form-field-infix {
+  width: 100%!important;
+}

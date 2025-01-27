@@ -1,0 +1,30 @@
+<mat-sidenav-container class="sidenav-container">
+
+  <mat-sidenav-content class="sidenav-content">
+    <mat-toolbar color="primary">
+      <button mat-icon-button (click)="isSidebarOpen = !isSidebarOpen">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>Online Store Dashboard</span>
+      <span class="spacer"></span>
+      <button mat-icon-button>
+        <mat-icon>account_circle</mat-icon>
+      </button>
+    </mat-toolbar>
+    <mat-sidenav #sidenav mode="side" [opened]="isSidebarOpen" class="sidenav">
+      <mat-nav-list>
+        <a class="text-white" mat-list-item routerLink="/dashboard">
+          <mat-icon>category</mat-icon>
+          <span class="pl-3">Prodotti</span>
+        </a>
+        <a class="text-white" mat-list-item routerLink="/statistics">
+          <mat-icon>assessment</mat-icon>
+          <span class="pl-3">Statistiche</span>
+        </a>
+      </mat-nav-list>
+    </mat-sidenav>
+    <div class="content content-wrapper" [ngClass]="{'opened': isSidebarOpen}">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
