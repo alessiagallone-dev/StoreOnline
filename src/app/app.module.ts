@@ -19,6 +19,7 @@ import { registerLocaleData } from '@angular/common';
 import localeIt from '@angular/common/locales/it';
 import { MatPaginatorIntlIt } from './i18n/mat-paginator-intl-it';
 import { ChartsModule } from 'ng2-charts';
+import { ProductsListComponent } from './features/products-list/products-list.component';
 
 
 registerLocaleData(localeIt);
@@ -27,6 +28,7 @@ registerLocaleData(localeIt);
   declarations: [
     AppComponent,
     DashboardComponent,
+    ProductsListComponent,
     ProductDetailComponent,
     ChartComponent,
     SuccessModalComponent,

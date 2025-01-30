@@ -1,0 +1,91 @@
+<div *ngIf="hasTitle" class="view-toggle d-flex justify-content-between align-items-center m-3">
+  <span>
+    <h2 *ngIf="typeView === 0">Pannello Prodotti</h2>
+    <h2 *ngIf="typeView === 1">Griglia Prodotti</h2>
+  </span>
+
+  <span>
+    <img src="assets/PanelLayout.png" alt="Panel View" (click)="toggleView(0)" [class.active]="typeView === 0" />
+    <img src="assets/GridLayout.png" alt="Grid View" (click)="toggleView(1)" [class.active]="typeView === 1" />
+
+    <a mat-fab [routerLink]="['/product', 0]" title="Aggiungi Nuovo Prodotto">
+      <mat-icon>add</mat-icon>
+    </a>
+  </span>
+</div>
+
+<div class="content-wrapper">
+  <div *ngIf="typeView === 0 && products" class="panel-layout">
+
+    <table mat-table [dataSource]="paginatedProducts" class="mat-elevation-z8">
+      <ng-container matColumnDef="category">
+        <th mat-header-cell *matHeaderCellDef> Categoria </th>
+        <td mat-cell *matCellDef="let product"> {{product?.data?.category}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef> Titolo </th>
+        <td mat-cell *matCellDef="let product"> {{product?.data?.title}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef> Descrizione </th>
+        <td mat-cell *matCellDef="let product">
+          <span class="ellipsed">
+            {{product?.data?.description}}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef> Prezzo </th>
+        <td mat-cell *matCellDef="let product"> {{product?.data?.price | currency: 'EUR': true: '1.0-2' : 'it-IT'}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="azioni">
+        <th mat-header-cell *matHeaderCellDef> </th>
+        <td mat-cell *matCellDef="let product">
+          <span class="d-flex justify-content-end">
+            <a *ngIf="product?.id" color="primary" mat-icon-button [routerLink]="['/product', product?.id]">
+              <mat-icon matTooltip="Dettaglio Prodotto">info</mat-icon>
+            </a>
+            <a color="accent" mat-icon-button matTooltip="Elimina Prodotto" (click)="deleteProdotto(product)">
+              <mat-icon>delete</mat-icon>
+            </a>
+          </span>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+
+  <div *ngIf="typeView === 1" class="grid-layout">
+    <mat-card *ngFor="let product of paginatedProducts" class="product-card">
+      <mat-card-content>
+        <mat-card-title [title]="product?.data?.title">{{ product?.data?.title }}</mat-card-title>
+        <mat-card-subtitle [title]="product?.data?.category">{{ product?.data?.category }}</mat-card-subtitle>
+        <p class="ellipsed2" [title]="product?.data?.description"
+          style="cursor: default; max-height: 40px; min-height: 40px;">
+          {{ product?.data?.description }}
+        </p>
+        <p class="text-right"><strong>{{ product?.data?.price | currency: 'EUR': true: '1.0-2' : 'it-IT' }}</strong></p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" [routerLink]="['/product', product?.id]" [disabled]="!product?.id"
+          [title]="!product?.id ? 'Id non presente' : 'Visualizza dettaglio'">Dettaglio</button>
+        <button mat-button color="warn" title="Elimina Prodotto" (click)="deleteProdotto(product)">Elimina</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
+
+<mat-paginator *ngIf="hasTitle" [length]="totalProducts" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+  (page)="onPageChange($event)" class="fixed-paginator">
+</mat-paginator>
+
+<div *ngIf="isLoading" class="loading-indicator">
+  <mat-progress-spinner mode="indeterminate" color="accent"></mat-progress-spinner>
+</div>

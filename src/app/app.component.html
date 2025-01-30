@@ -5,16 +5,30 @@
       <button mat-icon-button (click)="isSidebarOpen = !isSidebarOpen">
         <mat-icon>menu</mat-icon>
       </button>
-      <span>Online Store Dashboard</span>
+      <span>SweetShop Backoffice</span>
       <span class="spacer"></span>
-      <button mat-icon-button>
-        <mat-icon>account_circle</mat-icon>
+      <button mat-icon-button routerLink="/dashboard" title="Dashboard">
+        <mat-icon>dashboard</mat-icon>
+      </button>
+      <button mat-icon-button [routerLink]="['/product', 0]" title="Aggiungi prodotto">
+        <mat-icon>add</mat-icon>
+      </button>
+      <button mat-icon-button routerLink="/statistics" title="Statistiche">
+        <mat-icon>assessment</mat-icon>
       </button>
     </mat-toolbar>
     <mat-sidenav #sidenav mode="side" [opened]="isSidebarOpen" class="sidenav">
       <mat-nav-list>
         <a class="text-white" mat-list-item routerLink="/dashboard">
-          <mat-icon>category</mat-icon>
+          <mat-icon>dashboard</mat-icon>
+          <span class="pl-3">Dashboard</span>
+        </a>
+        <a class="text-white" mat-list-item [routerLink]="['/product', 0]">
+          <mat-icon>add</mat-icon>
+          <span class="pl-3">Prodotto</span>
+        </a>
+        <a class="text-white" mat-list-item routerLink="/product-list">
+          <mat-icon>list</mat-icon>
           <span class="pl-3">Prodotti</span>
         </a>
         <a class="text-white" mat-list-item routerLink="/statistics">

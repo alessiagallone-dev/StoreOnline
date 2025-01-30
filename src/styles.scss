@@ -9,8 +9,15 @@ $sidebar-width: 140px;
 
 @include angular-material-theme($custom-theme-light);
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
 .sidenav-container {
   height: 100vh;
@@ -28,9 +35,32 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   width: $sidebar-width;
 }
 
-.content.opened{
+.chart-container {
+  width: 90vw;
+  height: 80vh;
+  margin: 10px auto;
+  position: relative;
+}
+
+.content.opened {
   margin-left: $sidebar-width;
   transition: width 0.3s ease;
+
+  .chart-container {
+    width: calc(90vw - #{$sidebar-width});
+  }
+
+  .button-container {
+    width: calc(90vw - #{$sidebar-width}) !important;
+    margin: 10px auto;
+  }
+}
+
+.dashboard {
+  .chart-container {
+    width: 100% !important;
+    height: 50vh !important;
+  }
 }
 
 .sidenav:not([opened]) {
@@ -40,6 +70,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .content:not(.opened) {
   margin-left: 0;
 }
+
+
 
 .sidenav-content {
   flex: 1;
@@ -58,6 +90,13 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   .sidenav-content {
     padding: 10px;
   }
+}
+
+.mat-card-title {
+  cursor: default;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .ellipsed {
@@ -79,10 +118,35 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 
-input.mat-chip-input{
-  width: 100%!important;
-  padding: 10px!important;
+input.mat-chip-input {
+  width: 100% !important;
+  padding: 10px !important;
 }
+
 .mat-form-field-appearance-fill .mat-form-field-infix {
-  width: 100%!important;
+  width: 100% !important;
+}
+
+.loading-indicator {
+  position: fixed;
+  z-index: 999;
+  height: 2em;
+  width: 2em;
+  overflow: show;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.loading-indicator:before {
+  content: '';
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
 }

@@ -1,3 +1,8 @@
+export enum ViewType {
+  Panel,
+  Grid = 1
+}
+
 export class Product {
   constructor(
     // public productId: string,
@@ -7,14 +12,14 @@ export class Product {
     public employee: string,
     public description: string,
     public reviews: string[]
-  ) {}
+  ) { }
 }
 
 export class ProductList {
   constructor(
     public id: string,
     public data: Product[]
-  ) {}
+  ) { }
 }
 
 export class Store {
@@ -22,19 +27,19 @@ export class Store {
     public name: string,
     public category: string,
     public employees: string[]
-  ) {}
+  ) { }
 }
 
 export class StoreListItem {
   constructor(
     public id: string,
     public data: Store
-  ) {}
+  ) { }
 }
 
 export class StatisticheList {
   constructor(
     public numberOfProducts: number,
     public category: string
-  ) {}
+  ) { }
 }

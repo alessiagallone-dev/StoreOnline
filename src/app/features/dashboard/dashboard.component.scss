@@ -1,128 +1,31 @@
-$bg-color: #f9f9f9;
-$border-color: #ccc;
-$padding: 16px;
-$margin-bottom: 16px;
-$border-radius: 8px;
-
-.view-toggle img {
-  cursor: pointer;
-  width: 50px;
-  margin-right: 10px;
-  transition: transform 0.3s ease-in-out;
+.button-container {
+  width: 75vw;
+  margin: 10px auto;
 }
 
-.view-toggle img:hover {
-  transform: scale(1.1);
-}
-
-.view-toggle img.active {
-  border: 2px solid #1976d2;
-  padding: 5px;
-  border-radius: 5px;
-}
-
-.panel-layout {
-  display: flex;
-  flex-direction: column;
-  padding: 16px;
-}
-
-.product-panel {
-  margin-bottom: 16px;
-  padding: 16px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-
-  h3 {
-    margin-top: 0;
-    font-size: 1.5rem;
-  }
-
-  .product-actions {
-    margin-top: 16px;
-    display: flex;
-    justify-content: space-between;
-  }
-}
-
-.grid-layout {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(20%, 1fr));
-  gap: 16px;
-  padding: 16px;
-
-  .product-card {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    // padding: 16px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-
-    mat-card-header {
-      .mat-card-header-text {
-        margin: 0 !important;
-      }
-    }
-
-    .mat-card-header-text {
-      margin: 0 !important;
-    }
-
-    mat-card-content {
-      flex-grow: 1;
-    }
-
-    mat-card-actions {
-      display: flex;
-      justify-content: space-between;
-    }
-  }
-
-  @media (min-width: 1200px) {
-    grid-template-columns: repeat(auto-fill, minmax(20%, 1fr));
-  }
-
-  @media (max-width: 1199px) and (min-width: 992px) {
-    grid-template-columns: repeat(auto-fill, minmax(25%, 1fr));
-  }
-
-  @media (max-width: 991px) and (min-width: 768px) {
-    grid-template-columns: repeat(auto-fill, minmax(33.33%, 1fr));
-  }
-
-  @media (max-width: 767px) {
-    grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
-  }
-}
-
-.content-wrapper {
-  height: calc(80vh - 64px);
-  overflow-y: auto;
-  padding-bottom: 60px;
-}
-
-.fixed-paginator {
-  position: sticky;
-  bottom: 0;
+.custom-button {
+  margin: 10px;
+  font-size: 24px;
+  padding: 20px 40px;
   width: 100%;
-  background-color: white;
-  box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.1);
-  z-index: 10;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }
 
-.mat-column-category {
-  width: 32px;
-  padding-right: 24px;
-  text-align: left;
+.custom-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
-.mat-column-azioni {
-  width: 100px;
+/* Specific Hover Effects for each button color */
+.custom-button[color="primary"]:hover {
+  background-color: #004d40 !important;
+  /* Teal darkened */
 }
 
-.mat-column-price {
-  width: 32px;
-  padding: 0 12px;
-  text-align: left;
+.custom-button[color="accent"]:hover {
+  background-color: #6e0935 !important;
+  /* Deep Amber darkened */
 }

@@ -57,7 +57,7 @@
         <mat-form-field appearance="fill" class="w-100">
           <mat-label>Reviews</mat-label>
 
-          <mat-chip-list #chipList>
+          <mat-chip-list #chipList [disabled]="isEditing">
             <mat-chip *ngFor="let review of reviews.controls; let i = index" (removed)="removeReview(i)">
               {{ review.value }}
               <button matChipRemove>

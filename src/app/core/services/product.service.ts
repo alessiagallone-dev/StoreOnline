@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
+import { catchError, filter, map, switchMap, take } from 'rxjs/operators';
 import { Product, StatisticheList, StoreListItem, } from 'src/app/models/product.model';
 
 @Injectable({
@@ -19,74 +19,93 @@ export class ProductService {
 
   private loadMyStore() {
     this.http.get<StoreListItem[]>(this.baseUrl)
-      .pipe(map((stores) => {
-        if (stores.length === 0) {
-          throw new Error('No stores available');
-        }
-        return stores[0].id;
-      })
-      ).subscribe({
-        next: (idStore) => this.idStoreSubject.next(idStore),
-        error: (err) => console.error('Failed to set store ID', err),
+      .pipe(
+        map((stores) => {
+          if (stores.length === 0) {
+            throw new Error('Non ci sono Negozi disponibili');
+          }
+          return stores[0].id;
+        }),
+        catchError((err) => {
+          console.error('Caricamento Negozi Fallito', err);
+          return of(null);
+        })
+      )
+      .subscribe({
+        next: (idStore) => {
+          if (idStore) {
+            this.idStoreSubject.next(idStore);
+          } else {
+            console.error('Nessun Id Negozio Disponibile');
+          }
+        },
+        error: (err) => console.error('Errore caricamento Negozio', err),
       });
   }
 
-  getAllStores(): Observable<StoreListItem[]> {
-    return this.http.get<StoreListItem[]>(`${this.baseUrl}`);
-  }
-
-  getStatisticheCategoria(): Observable<StatisticheList[]> {
+  private ensureStoreId(): Observable<string> {
     return this.idStore$.pipe(
       filter((idStore): idStore is string => idStore !== null),
-      switchMap((idStore) =>
-        this.http.get<any>(`${this.baseUrl}/${idStore}/stats/categories`)
-      )
+      take(1),
+      catchError((err) => {
+        console.error('ID Negozio non disponibile', err);
+        throw new Error('ID Negozio non disponibile');
+      })
     );
   }
 
+  getAllStores(): Observable<StoreListItem[]> {
+    return this.http.get<StoreListItem[]>(this.baseUrl);
+  }
+
+  /// Gestione Porodotti
   getProducts(page: number = 1, elements: number = 100): Observable<any> {
-    return this.idStore$.pipe(
-      filter((idStore): idStore is string => idStore !== null),
+    return this.ensureStoreId().pipe(
       switchMap((idStore) =>
-        this.http.get<any>(
-          `${this.baseUrl}/${idStore}/products?page=${page}&elements=${elements}`
-        )
+        this.http.get<any>(`${this.baseUrl}/${idStore}/products?page=${page}&elements=${elements}`)
       )
     );
   }
 
   getProductById(idProduct: string): Observable<Product> {
-    return this.idStore$.pipe(
-      switchMap((idStore) => {
-        if (!idStore) {
-          throw new Error('Store ID is not set yet');
-        }
-        return this.http.get<Product>(
-          `${this.baseUrl}/${idStore}/products/${idProduct}`
-        );
-      })
+    return this.ensureStoreId().pipe(
+      switchMap((idStore) =>
+        this.http.get<Product>(`${this.baseUrl}/${idStore}/products/${idProduct}`)
+      )
     );
   }
 
-  createProduct(product: Product): Observable<string> {
-    return this.idStore$.pipe(
-      switchMap((idStore) => {
-        if (!idStore) {
-          throw new Error('Store ID is not set yet');
-        }
-        return this.http.post<string>(`${this.baseUrl}/${idStore}/products`, product);
-      })
+  createProduct(product: Product): Observable<any> {
+    return this.ensureStoreId().pipe(
+      switchMap((idStore) =>
+        this.http.post<any>(`${this.baseUrl}/${idStore}/products`, product, {
+          responseType: 'text' as 'json'
+        }).pipe(
+          catchError((err) => {
+            console.error('Errore durante la creazione del prodotto:', err);
+            return throwError(() => new Error('Errore durante la creazione del prodotto'));
+          })
+        )
+      )
     );
   }
 
   deleteProduct(productId: string): Observable<void> {
-    return this.idStore$.pipe(
-      switchMap((idStore) => {
-        if (!idStore) {
-          throw new Error('Store ID is not set yet');
-        }
-        return this.http.delete<void>(`${this.baseUrl}/${idStore}/products/${productId}`);
-      })
+    return this.ensureStoreId().pipe(
+      switchMap((idStore) =>
+        this.http.delete<void>(`${this.baseUrl}/${idStore}/products/${productId}`)
+      )
     );
   }
+  /// Fine Gestione Porodotti
+
+  /// Gestione Statistiche
+  getStatisticheCategoria(): Observable<StatisticheList[]> {
+    return this.ensureStoreId().pipe(
+      switchMap((idStore) =>
+        this.http.get<any>(`${this.baseUrl}/${idStore}/stats/categories`)
+      )
+    );
+  }
+  /// Fine Gestione Statistiche
 }

@@ -49,31 +49,36 @@ export class ProductDetailComponent implements OnInit {
     }
   }
 
-  async toggleEdit() {
-    this.isEditing = !this.isEditing;
-    if (!this.isEditing) {
-      this.productForm.enable();
-    } else {
+  toggleEdit() {
+    // Sono in aggiuta nuovo prodotto
+    if (this.isAdd) {
       if (this.productForm.valid) {
         const prodotto: Product = this.productForm.value;
-        const response = await this.productService.createProduct(prodotto).toPromise();
-        if (!!response) {
-          const dialogRef = this.dialog.open(SuccessModalComponent, {
-            data: {
-              message: `Salvataggio <strong>${prodotto.title}</strong> avvenuto con successo!`
-            }
-          }).afterClosed().subscribe(async result => {
-            if (result) {
-              // Naviga verso la dashboard
-            }
-          });
-        } else {
-          this.dialog.open(ErrorModalComponent);
-          this.isEditing = !this.isEditing;
-        }
-
+        this.productService.createProduct(prodotto).subscribe(
+          response => {
+            this.dialog.open(SuccessModalComponent, {
+              data: { message: `Salvataggio <strong>${prodotto.title}</strong> avvenuto con successo!` }
+            }).afterClosed().subscribe(result => {
+              if (result) {
+                this.productForm.disable();
+                this.isEditing = !this.isEditing;
+              }
+            });
+          },
+          error => {
+            this.dialog.open(ErrorModalComponent, {
+              data: { message: `${error.message}` }
+            });
+          }
+        );
       } else {
         this.productForm.markAllAsTouched();
+      }
+    } else {
+      // Sono in modifica, non posso salvare, ma abito per simulare modifica
+      this.isEditing = !this.isEditing;
+      if (!this.isEditing) {
+        this.productForm.enable();
       }
     }
   }
