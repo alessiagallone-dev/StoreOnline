@@ -4,6 +4,8 @@ import { Product, ViewType } from 'src/app/models/product.model';
 import { MatDialog, PageEvent } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { DialogData, ModalComponent } from 'src/app/shared/modal/modal.component';
+import { ScreenSizeService } from 'src/app/screen-size.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-products-list',
@@ -22,15 +24,24 @@ export class ProductsListComponent implements OnInit {
   pageSizeOptions = [8, 16, 32];
   displayedColumns: string[] = ['category', 'title', 'description', 'price', 'azioni'];
 
+  isMobile: boolean = false;
+  private _screenSizeSubscription: Subscription;
+
   prodottoToDelete: any;
 
   constructor(
     private route: ActivatedRoute,
     private _productService: ProductService,
-    private _dialog: MatDialog
+    private _dialog: MatDialog,
+    private _screenSizeService: ScreenSizeService
   ) { }
 
   ngOnInit() {
+
+    this._screenSizeSubscription = this._screenSizeService.screenWidth$.subscribe(width => {
+      this.isMobile = this._screenSizeService.isMobile();
+    });
+
     const viewTypeParam = this.route.snapshot.paramMap.get("viewType");
     if (viewTypeParam) {
       this.typeView = viewTypeParam === '1' ? ViewType.Grid : ViewType.Panel;

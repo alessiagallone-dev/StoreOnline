@@ -1,7 +1,7 @@
-<div class="content" [ngClass]="hasTitle ? ' w-75 mx-auto' : ''">
+<div class="content" [ngClass]="hasTitle && !isMobile ? ' w-75 mx-auto' : 'w-100'">
 
   <app-title [visible]="hasTitle">
-    <h2>{{typeView === 0 ? 'Pannello ' : 'Griglia'}} Prodotti</h2>
+    <h2>{{typeView === 0 ? 'Pannello ' : 'Griglia'}}</h2>
 
     <span>
       <img src="assets/PanelLayout.png" alt="Panel View" (click)="toggleView(0)" [class.active]="typeView === 0" />

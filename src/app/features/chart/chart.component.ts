@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ProductService } from './../../core/services/product.service';
 import { ChartDataSets } from 'chart.js';
 import * as Chart from 'chart.js';
+import { ScreenSizeService } from 'src/app/screen-size.service';
 
 @Component({
   selector: 'app-chart',
@@ -15,6 +16,8 @@ export class ChartComponent implements OnInit {
   chartOptions: any;
   chartLabels: string[] = [];
   chartDataset: number[] = [];
+  isMobile: boolean = false;
+  private _screenSizeSubscription: Subscription;
 
   public polarAreaChartLabels: string[] = [];
   public polarAreaChartData: ChartDataSets[] = [
@@ -32,9 +35,15 @@ export class ChartComponent implements OnInit {
     }
   };
 
-  constructor(private productService: ProductService) { }
+  constructor(
+    private productService: ProductService,
+    private _screenSizeService: ScreenSizeService) { }
 
   async ngOnInit() {
+    this._screenSizeSubscription = this._screenSizeService.screenWidth$.subscribe(width => {
+      this.isMobile = this._screenSizeService.isMobile();
+    });
+
     this.initChart();
   }
 
@@ -105,13 +114,13 @@ export class ChartComponent implements OnInit {
             }]
           },
           legend: {
-            display: this.hasTitle,
+            display: this.hasTitle && !this.isMobile,
             position: 'left',
             align: 'start',
             fullWidth: true
           },
           layout: {
-            padding: { left: 50, right: 50, top: 0, bottom: 0 }
+            padding: { left: this.isMobile ? 0 : 50, right: this.isMobile ? 0 : 50, top: 0, bottom: 0 }
           }
         }
       });

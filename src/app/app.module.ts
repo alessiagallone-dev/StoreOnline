@@ -19,6 +19,7 @@ import { ChartsModule } from 'ng2-charts';
 import { ProductsListComponent } from './features/products-list/products-list.component';
 import { TitleComponent } from './shared/title/title.component';
 import { ModalComponent } from './shared/modal/modal.component';
+import { ResponsiveClassDirective } from './responsive-class.directive';
 
 
 registerLocaleData(localeIt);
@@ -31,7 +32,8 @@ registerLocaleData(localeIt);
     ProductDetailComponent,
     ChartComponent,
     TitleComponent,
-    ModalComponent
+    ModalComponent,
+    ResponsiveClassDirective
   ],
   imports: [
     BrowserModule,

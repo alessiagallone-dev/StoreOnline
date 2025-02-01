@@ -20,6 +20,10 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+.mat-drawer-content {
+  padding: 0;
+}
+
 .mat-raised-button.mat-primary,
 .mat-toolbar.mat-primary {
   color: #fff;

@@ -1,21 +1,35 @@
 <div class="dashboard">
-  <div class="d-flex justify-content-between button-container">
-    <button mat-raised-button color="accent" [routerLink]="['/product', 0]" class="custom-button">
-      <mat-icon>add</mat-icon>
-      Prodotto
-    </button>
-    <button mat-raised-button color="info" routerLink="/product-list/0" class="custom-button list">
-      <img src="assets/PanelLayout.png" alt="Panel View" style="width: 50px;" />
-      Prodotti
-    </button>
-    <button mat-raised-button color="secondary" routerLink="/product-list/1" class="custom-button list">
-      <img src="assets/GridLayout.png" alt="Grid View" style="width: 50px;" />
-      Prodotti
-    </button>
-    <button mat-raised-button color="primary" routerLink="/statistics" class="custom-button chart">
-      <mat-icon>assessment</mat-icon>
-      Statistiche
-    </button>
+  <div class="button-container">
+    <div class="row">
+
+      <div class="col-md-3 col-sm-12">
+        <button mat-raised-button color="accent" [routerLink]="['/product', 0]" class="custom-button">
+          <mat-icon>add</mat-icon>
+          Prodotto
+        </button>
+      </div>
+
+      <div class="col-md-3 col-sm-12">
+        <button mat-raised-button color="info" routerLink="/product-list/0" class="custom-button list">
+          <img src="assets/PanelLayout.png" alt="Panel View" style="width: 50px;" />
+          Prodotti
+        </button>
+      </div>
+
+      <div class="col-md-3 col-sm-12">
+        <button mat-raised-button color="secondary" routerLink="/product-list/1" class="custom-button list">
+          <img src="assets/GridLayout.png" alt="Grid View" style="width: 50px;" />
+          Prodotti
+        </button>
+      </div>
+
+      <div class="col-md-3 col-sm-12">
+        <button mat-raised-button color="primary" routerLink="/statistics" class="custom-button chart">
+          <mat-icon>assessment</mat-icon>
+          Statistiche
+        </button>
+      </div>
+    </div>
   </div>
 
   <div class="row">
