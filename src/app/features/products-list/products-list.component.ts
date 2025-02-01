@@ -59,52 +59,58 @@ export class ProductsListComponent implements OnInit {
         this.totalProducts = products.length;
         this.pageSizeOptions = [8, 16, 32, this.totalProducts];
       }
+      this.isLoading = false;
     });
   }
 
   deleteProdotto(prodottoDaCancellare: any) {
     this.prodottoToDelete = prodottoDaCancellare;
+
     const dialogRef = this._dialog.open<ModalComponent, DialogData, any>(ModalComponent, {
       data: {
         message: `Sei sicuro di voler procedere alla cancellazione di <br />
-        <strong class="d-flex justify-content-center py-3">${prodottoDaCancellare.data.title}</strong>`,
+                  <strong class="d-flex justify-content-center py-3">${prodottoDaCancellare.data.title}</strong>`,
         title: 'Conferma Cancellazione',
         cancelText: 'No',
-        confirmText: 'Si',
-        showConfirmBtn: true,
-        showCancelBtn: true
+        confirmText: 'Si'
       },
       panelClass: 'info'
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.isLoading = true;
-        this._productService.deleteProduct(this.prodottoToDelete.id).subscribe(
-          resultDelete => {
-            this.loadProducts();
-            this.isLoading = false;
-            delete this.prodottoToDelete;
-          },
-          error => {
-            this.isLoading = false;
-            const dialogRef = this._dialog.open<ModalComponent, DialogData, any>(ModalComponent, {
-              data: {
-                message: `Non è possibile cancellare <br />
-                <strong class="d-flex justify-content-center py-3">${prodottoDaCancellare.data.title}</strong> <br/>
-                Riprovare più tardi.`,
-                title: 'Attenzione',
-                confirmText: 'Chiudi',
-                showConfirmBtn: true,
-                showCancelBtn: false
-              },
-              panelClass: 'error'
-            });
-          });
+        if (this.prodottoToDelete && this.prodottoToDelete.id) {
+          this.isLoading = true;
+          this._productService.deleteProduct(this.prodottoToDelete.id).subscribe(
+            (resultDelete) => {
+              this.loadProducts();
+              delete this.prodottoToDelete;
+            },
+            (error) => {
+              this.openModaleErrore(this.prodottoToDelete.data && this.prodottoToDelete.data.title || 'Prodotto non trovato');
+            }
+          );
+        } else {
+          this.openModaleErrore(this.prodottoToDelete.data && this.prodottoToDelete.data.title || 'Prodotto non trovato');
+        }
       } else {
         delete this.prodottoToDelete;
         this.isLoading = false;
       }
+    });
+  }
+
+
+  openModaleErrore(titolo: string) {
+    this.isLoading = false;
+    this._dialog.open<ModalComponent, DialogData, any>(ModalComponent, {
+      data: {
+        message: `Non è possibile cancellare <br />
+                  <strong class="d-flex justify-content-center">${titolo}</strong> <br/>
+                  Riprovare più tardi.`,
+        title: 'Attenzione'
+      },
+      panelClass: 'error'
     });
   }
 

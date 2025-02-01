@@ -1,6 +1,13 @@
 <div appResponsiveClass [desktopClass]="'w-75'" [mobileClass]="'w-100'" class="container mx-auto my-4">
+
   <app-title>
     <h2>{{isAdd ? 'Aggiungi ' : 'Dettaglio '}} Prodotto</h2>
+
+    <span>
+      <a *ngIf="!isAdd" mat-fab (click)="aggiungiNuovo()" title="Aggiungi Nuovo Prodotto">
+        <mat-icon>add</mat-icon>
+      </a>
+    </span>
   </app-title>
 
   <mat-card>

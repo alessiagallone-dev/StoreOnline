@@ -42,10 +42,7 @@ export class ProductDetailComponent implements OnInit {
           this._dialog.open(ModalComponent, {
             data: {
               message: `${error.message}`,
-              title: 'Attenzione',
-              confirmText: 'Chiudi',
-              showConfirmBtn: true,
-              showCancelBtn: false
+              title: 'Attenzione'
             },
             panelClass: 'error'
           });
@@ -56,6 +53,12 @@ export class ProductDetailComponent implements OnInit {
       this.isAdd = true;
       this.createForm();
     }
+  }
+
+  aggiungiNuovo() {
+    this.isAdd = true;
+    this.isEditing = false;
+    this.createForm();
   }
 
   toggleEdit() {
@@ -70,10 +73,7 @@ export class ProductDetailComponent implements OnInit {
             const dialogRef = this._dialog.open<ModalComponent, DialogData, any>(ModalComponent, {
               data: {
                 message: `Salvataggio <strong>${prodotto.title}</strong> avvenuto con successo!`,
-                title: 'Conferma Salvataggio',
-                confirmText: 'Chiudi',
-                showConfirmBtn: true,
-                showCancelBtn: false
+                title: 'Conferma Salvataggio'
               },
               panelClass: 'success'
             });
@@ -82,6 +82,7 @@ export class ProductDetailComponent implements OnInit {
               if (result) {
                 this.productForm.disable();
                 this.isEditing = !this.isEditing;
+                this.isAdd = false;
               }
             });
 
@@ -91,10 +92,7 @@ export class ProductDetailComponent implements OnInit {
             this._dialog.open(ModalComponent, {
               data: {
                 message: `${error.message}`,
-                title: 'Attenzione',
-                confirmText: 'Chiudi',
-                showConfirmBtn: true,
-                showCancelBtn: false
+                title: 'Attenzione'
               },
               panelClass: 'error'
             });

@@ -4,10 +4,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 export interface DialogData {
   message: string;
   title: string;
-  confirmText: string;
+  confirmText?: string;
   cancelText?: string;
-  showConfirmBtn: boolean;
-  showCancelBtn: boolean;
 }
 
 @Component({
