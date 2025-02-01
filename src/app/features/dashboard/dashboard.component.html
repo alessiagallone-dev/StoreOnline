@@ -18,14 +18,15 @@
 
       <div class="col-md-3 col-sm-12">
         <button mat-raised-button color="info" routerLink="/product-list/0" class="custom-button list">
-          <img src="assets/PanelLayout.png" alt="Panel View" class="img-icon" />
+          <img src="assets/PanelLayout.png" alt="Panel View" [ngClass]="isMobile ? 'img-icon-mobile' : 'img-icon'" />
           Prodotti
         </button>
       </div>
 
       <div class="col-md-3 col-sm-12">
         <button mat-raised-button color="secondary" routerLink="/product-list/1" class="custom-button list">
-          <img src="assets/GridLayout.png" alt="Grid View" class="img-icon" />
+          <img src="assets/GridLayout.png" alt="Grid View"
+            [ngClass]="{ 'img-icon-mobile': isMobile, 'img-icon': !isMobile }" />
           Prodotti
         </button>
       </div>

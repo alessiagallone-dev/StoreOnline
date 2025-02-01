@@ -60,6 +60,7 @@ export class ProductsListComponent implements OnInit {
         this.pageSizeOptions = [8, 16, 32, this.totalProducts];
       }
       this.isLoading = false;
+      delete this.prodottoToDelete;
     });
   }
 
@@ -82,13 +83,8 @@ export class ProductsListComponent implements OnInit {
         if (this.prodottoToDelete && this.prodottoToDelete.id) {
           this.isLoading = true;
           this._productService.deleteProduct(this.prodottoToDelete.id).subscribe(
-            (resultDelete) => {
-              this.loadProducts();
-              delete this.prodottoToDelete;
-            },
-            (error) => {
-              this.openModaleErrore(this.prodottoToDelete.data && this.prodottoToDelete.data.title || 'Prodotto non trovato');
-            }
+            complete => this.loadProducts(),
+            error => this.openModaleErrore(this.prodottoToDelete.data && this.prodottoToDelete.data.title || 'Prodotto non trovato')
           );
         } else {
           this.openModaleErrore(this.prodottoToDelete.data && this.prodottoToDelete.data.title || 'Prodotto non trovato');
@@ -106,7 +102,7 @@ export class ProductsListComponent implements OnInit {
     this._dialog.open<ModalComponent, DialogData, any>(ModalComponent, {
       data: {
         message: `Non è possibile cancellare <br />
-                  <strong class="d-flex justify-content-center">${titolo}</strong> <br/>
+                  <strong class="d-flex justify-content-center">${titolo}</strong>
                   Riprovare più tardi.`,
         title: 'Attenzione'
       },
