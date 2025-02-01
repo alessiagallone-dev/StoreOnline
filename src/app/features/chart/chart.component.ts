@@ -3,6 +3,7 @@ import { ProductService } from './../../core/services/product.service';
 import { ChartDataSets } from 'chart.js';
 import * as Chart from 'chart.js';
 import { ScreenSizeService } from 'src/app/screen-size.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-chart',
