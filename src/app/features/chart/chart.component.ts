@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ProductService } from './../../core/services/product.service';
 import { ChartDataSets } from 'chart.js';
 import * as Chart from 'chart.js';
@@ -9,7 +9,8 @@ import * as Chart from 'chart.js';
   styleUrls: ['./chart.component.scss']
 })
 export class ChartComponent implements OnInit {
-
+  @Input() hasTitle = true;
+  chart: any;
   chartData: any;
   chartOptions: any;
   chartLabels: string[] = [];
@@ -34,18 +35,24 @@ export class ChartComponent implements OnInit {
   constructor(private productService: ProductService) { }
 
   async ngOnInit() {
-    this.loadChartData();
+    this.initChart();
   }
 
-  loadChartData() {
+  ngOnDestroy() {
+    if (this.chart) {
+      this.chart.destroy();
+    }
+  }
+
+  initChart() {
     this.productService.getStatisticheCategoria().subscribe(statistiche => {
       const categoryData: { [key: string]: number } = {};
       for (const statistica of statistiche) {
         categoryData[statistica.category] = statistica.numberOfProducts;
       }
 
-      var ctx = document.getElementById('myChart') as HTMLCanvasElement;
-      var myChart = new Chart(ctx, {
+      var ctx = document.getElementById('chartCategorie') as HTMLCanvasElement;
+      this.chart = new Chart(ctx, {
         type: 'polarArea',
         data: {
           labels: Object.keys(categoryData),
@@ -96,6 +103,15 @@ export class ChartComponent implements OnInit {
                 beginAtZero: true
               }
             }]
+          },
+          legend: {
+            display: this.hasTitle,
+            position: 'left',
+            align: 'start',
+            fullWidth: true
+          },
+          layout: {
+            padding: { left: 50, right: 50, top: 0, bottom: 0 }
           }
         }
       });

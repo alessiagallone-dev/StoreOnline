@@ -1,20 +1,15 @@
-<div class="container mt-4">
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>
-        <a mat-icon-button routerLink="/dashboard" matTooltip="Torna alla dashboard" aria-label="Torna alla dashboard">
-          <mat-icon>arrow_back</mat-icon>
-        </a>
-        Dettaglio Prodotto
-      </mat-card-title>
-    </mat-card-header>
+<div class="container mx-auto my-4 w-75">
+  <app-title>
+    <h2>{{isAdd ? 'Aggiungi ' : 'Dettaglio '}} Prodotto</h2>
+  </app-title>
 
+  <mat-card>
     <mat-card-content *ngIf="productForm" style="margin: 0 16px;">
       <form [formGroup]="productForm">
         <div class="row">
           <div class="col-md-6">
             <mat-form-field appearance="fill" class="w-100 mb-2">
-              <mat-label>Titolo Prodotto</mat-label>
+              <mat-label>Titolo</mat-label>
               <input matInput formControlName="title" placeholder="Titolo prodotto" required>
               <mat-error *ngIf="productForm.get('title')?.hasError('required')">
                 Titolo obbligatorio.
@@ -80,4 +75,8 @@
       </form>
     </mat-card-content>
   </mat-card>
+</div>
+
+<div *ngIf="isLoading" class="loading-indicator">
+  <mat-progress-spinner mode="indeterminate" color="accent"></mat-progress-spinner>
 </div>

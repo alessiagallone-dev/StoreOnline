@@ -5,8 +5,7 @@ import { ProductService } from "./../../core/services/product.service";
 import { Product } from "./../../models/product.model";
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent, MatDialog } from "@angular/material";
-import { ErrorModalComponent } from "./../../shared/modals/error-modal/error-modal.component";
-import { SuccessModalComponent } from "src/app/shared/modals/success-modal/success-modal.component";
+import { DialogData, ModalComponent } from "src/app/shared/modal/modal.component";
 
 @Component({
   selector: "app-product-detail",
@@ -25,7 +24,7 @@ export class ProductDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private productService: ProductService,
     private fb: FormBuilder,
-    private dialog: MatDialog
+    private _dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -38,9 +37,18 @@ export class ProductDetailComponent implements OnInit {
           this.product = product;
           this.createForm(product);
         },
-        error: (err) => {
-          this.dialog.open(ErrorModalComponent);
-          console.error("Error fetching product details", err);
+        error: (error) => {
+          this._dialog.open(ModalComponent, {
+            data: {
+              message: `${error.message}`,
+              title: 'Attenzione',
+              confirmText: 'Chiudi',
+              showConfirmBtn: true,
+              showCancelBtn: false
+            },
+            panelClass: 'error'
+          });
+          console.error("Errore recupero dettaglio prodotto", error);
         },
       });
     } else {
@@ -56,18 +64,36 @@ export class ProductDetailComponent implements OnInit {
         const prodotto: Product = this.productForm.value;
         this.productService.createProduct(prodotto).subscribe(
           response => {
-            this.dialog.open(SuccessModalComponent, {
-              data: { message: `Salvataggio <strong>${prodotto.title}</strong> avvenuto con successo!` }
-            }).afterClosed().subscribe(result => {
+
+            const dialogRef = this._dialog.open<ModalComponent, DialogData, any>(ModalComponent, {
+              data: {
+                message: `Salvataggio <strong>${prodotto.title}</strong> avvenuto con successo!`,
+                title: 'Conferma Salvataggio',
+                confirmText: 'Chiudi',
+                showConfirmBtn: true,
+                showCancelBtn: false
+              },
+              panelClass: 'success'
+            });
+
+            dialogRef.afterClosed().subscribe(result => {
               if (result) {
                 this.productForm.disable();
                 this.isEditing = !this.isEditing;
               }
             });
+
           },
           error => {
-            this.dialog.open(ErrorModalComponent, {
-              data: { message: `${error.message}` }
+            this._dialog.open(ModalComponent, {
+              data: {
+                message: `${error.message}`,
+                title: 'Attenzione',
+                confirmText: 'Chiudi',
+                showConfirmBtn: true,
+                showCancelBtn: false
+              },
+              panelClass: 'error'
             });
           }
         );
@@ -75,7 +101,7 @@ export class ProductDetailComponent implements OnInit {
         this.productForm.markAllAsTouched();
       }
     } else {
-      // Sono in modifica, non posso salvare, ma abito per simulare modifica
+      // Sono in modifica, non posso salvare, ma abilito per simulare modifica
       this.isEditing = !this.isEditing;
       if (!this.isEditing) {
         this.productForm.enable();

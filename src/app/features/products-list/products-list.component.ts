@@ -2,8 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ProductService } from '../../core/services/product.service';
 import { Product, ViewType } from 'src/app/models/product.model';
 import { MatDialog, PageEvent } from '@angular/material';
-import { InfoModalComponent } from 'src/app/shared/modals/info-modal/info-modal.component';
 import { ActivatedRoute } from '@angular/router';
+import { DialogData, ModalComponent } from 'src/app/shared/modal/modal.component';
 
 @Component({
   selector: 'app-products-list',
@@ -32,7 +32,7 @@ export class ProductsListComponent implements OnInit {
 
   ngOnInit() {
     const viewTypeParam = this.route.snapshot.paramMap.get("viewType");
-    if(viewTypeParam){
+    if (viewTypeParam) {
       this.typeView = viewTypeParam === '1' ? ViewType.Grid : ViewType.Panel;
 
     }
@@ -53,22 +53,46 @@ export class ProductsListComponent implements OnInit {
 
   deleteProdotto(prodottoDaCancellare: any) {
     this.prodottoToDelete = prodottoDaCancellare;
-    const dialogRef = this._dialog.open(InfoModalComponent, {
+    const dialogRef = this._dialog.open<ModalComponent, DialogData, any>(ModalComponent, {
       data: {
         message: `Sei sicuro di voler procedere alla cancellazione di <br />
-        <strong>${prodottoDaCancellare.data.title}</strong>?`
-      }
-    }).afterClosed().subscribe(async result => {
+        <strong class="d-flex justify-content-center py-3">${prodottoDaCancellare.data.title}</strong>`,
+        title: 'Conferma Cancellazione',
+        cancelText: 'No',
+        confirmText: 'Si',
+        showConfirmBtn: true,
+        showCancelBtn: true
+      },
+      panelClass: 'info'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.isLoading = true;
         this._productService.deleteProduct(this.prodottoToDelete.id).subscribe(
           resultDelete => {
-            delete this.prodottoToDelete;
             this.loadProducts();
             this.isLoading = false;
+            delete this.prodottoToDelete;
+          },
+          error => {
+            this.isLoading = false;
+            const dialogRef = this._dialog.open<ModalComponent, DialogData, any>(ModalComponent, {
+              data: {
+                message: `Non è possibile cancellare <br />
+                <strong class="d-flex justify-content-center py-3">${prodottoDaCancellare.data.title}</strong> <br/>
+                Riprovare più tardi.`,
+                title: 'Attenzione',
+                confirmText: 'Chiudi',
+                showConfirmBtn: true,
+                showCancelBtn: false
+              },
+              panelClass: 'error'
+            });
           });
       } else {
         delete this.prodottoToDelete;
+        this.isLoading = false;
       }
     });
   }

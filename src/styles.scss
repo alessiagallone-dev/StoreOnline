@@ -1,11 +1,12 @@
 @import '~@angular/material/theming';
-$custom-primary: mat-palette($mat-teal, 500, 300, 700);
+$custom-primary: mat-palette($mat-teal, 300, 300, 700);
 $custom-accent: mat-palette($mat-pink);
 $custom-warn: mat-palette($mat-red);
 $custom-theme-light: mat-light-theme($custom-primary, $custom-accent, $custom-warn);
 
-// $sidebar-width: 55px;
 $sidebar-width: 140px;
+$primary-color: #4db6ac;
+
 
 @include angular-material-theme($custom-theme-light);
 
@@ -19,6 +20,11 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+.mat-raised-button.mat-primary,
+.mat-toolbar.mat-primary {
+  color: #fff;
+}
+
 .sidenav-container {
   height: 100vh;
   display: flex;
@@ -26,7 +32,7 @@ body {
 }
 
 .sidenav {
-  background: #009688;
+  background: $primary-color;
   margin-top: 64px;
   transition: width 0.3s ease;
 }
@@ -149,4 +155,40 @@ input.mat-chip-input {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.3);
+}
+
+.view-toggle img {
+  cursor: pointer;
+  width: 50px;
+  margin-right: 10px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.view-toggle img:hover {
+  transform: scale(1.1);
+}
+
+.view-toggle img.active {
+  border: 2px solid #1976d2;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.cdk-overlay-pane {
+
+  &.success {
+    border-top: 5px solid #20c997 !important;
+    border-bottom: 5px solid #20c997 !important;
+  }
+
+  &.info {
+    border-top: 5px solid $primary-color !important;
+    border-bottom: 5px solid $primary-color !important;
+  }
+
+  &.error {
+    border-top: 5px solid red !important;
+    border-bottom: 5px solid red !important;
+  }
+
 }

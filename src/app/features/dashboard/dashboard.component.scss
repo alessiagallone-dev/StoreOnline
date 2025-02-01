@@ -1,3 +1,5 @@
+$primary-color: #4db6ac; 
+
 .button-container {
   width: 75vw;
   margin: 10px auto;
@@ -14,18 +16,23 @@
   transition: all 0.3s ease;
 }
 
+.custom-button.list {
+  color: $primary-color;
+}
+
+.custom-button.chart {
+  color: white;
+}
+
 .custom-button:hover {
   transform: scale(1.1);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* Specific Hover Effects for each button color */
 .custom-button[color="primary"]:hover {
   background-color: #004d40 !important;
-  /* Teal darkened */
 }
 
 .custom-button[color="accent"]:hover {
   background-color: #6e0935 !important;
-  /* Deep Amber darkened */
 }
