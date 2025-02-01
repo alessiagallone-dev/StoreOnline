@@ -14,6 +14,7 @@ import { DialogData, ModalComponent } from "src/app/shared/modal/modal.component
 })
 export class ProductDetailComponent implements OnInit {
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
+  isLoading = false;
   reactiveKeywords;
   productForm: FormGroup;
   product: Product | undefined;
@@ -62,9 +63,10 @@ export class ProductDetailComponent implements OnInit {
     if (this.isAdd) {
       if (this.productForm.valid) {
         const prodotto: Product = this.productForm.value;
+        this.isLoading = true;
         this.productService.createProduct(prodotto).subscribe(
           response => {
-
+            this.isLoading = false;
             const dialogRef = this._dialog.open<ModalComponent, DialogData, any>(ModalComponent, {
               data: {
                 message: `Salvataggio <strong>${prodotto.title}</strong> avvenuto con successo!`,
@@ -85,6 +87,7 @@ export class ProductDetailComponent implements OnInit {
 
           },
           error => {
+            this.isLoading = false;
             this._dialog.open(ModalComponent, {
               data: {
                 message: `${error.message}`,
@@ -98,6 +101,7 @@ export class ProductDetailComponent implements OnInit {
           }
         );
       } else {
+        this.isLoading = false;
         this.productForm.markAllAsTouched();
       }
     } else {
