@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 import { ScreenSizeService } from "./screen-size.service";
 import { Subscription } from "rxjs";
 import { ProductService } from "./core/services/product.service";
-import { StoreItem } from "./models/product.model";
+import { Store } from "./models/product.model";
 
 @Component({
   selector: "app-root",
@@ -12,7 +12,7 @@ import { StoreItem } from "./models/product.model";
 export class AppComponent {
   title = "backoffice-store-online";
   isSidebarOpen = true;
-  store: StoreItem;
+  store: Store;
 
   isMobile: boolean = false;
   nomeImpiegato: string;

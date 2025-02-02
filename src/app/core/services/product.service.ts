@@ -17,8 +17,8 @@ export class ProductService {
     this.loadMyStore();
   }
 
-  getMyStore(idStore: string): Observable<StoreItem> {
-    return this.http.get<StoreItem>(`${this.baseUrl}/${idStore}`).pipe(
+  getMyStore(idStore: string): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/${idStore}`).pipe(
       catchError(error => {
         this.handleError(error);
         return of(null);
