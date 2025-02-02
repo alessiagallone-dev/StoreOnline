@@ -2,28 +2,28 @@
   <div class="button-container">
     <div class="row">
 
-      <div class="col-md-3 col-sm-12">
+      <div class="col-lg-3 col-md-6 col-sm-12">
         <button mat-raised-button color="accent" [routerLink]="['/product', 0]" class="custom-button">
           <mat-icon>add</mat-icon>
           Prodotto
         </button>
       </div>
 
-      <div class="col-md-3 col-sm-12">
+      <div class="col-lg-3 col-md-6 col-sm-12">
         <button mat-raised-button color="primary" routerLink="/statistics" class="custom-button chart">
           <mat-icon>assessment</mat-icon>
           Statistiche
         </button>
       </div>
 
-      <div class="col-md-3 col-sm-12">
+      <div class="col-lg-3 col-md-6 col-sm-12">
         <button mat-raised-button color="info" routerLink="/product-list/0" class="custom-button list">
           <img src="assets/PanelLayout.png" alt="Panel View" [ngClass]="isMobile ? 'img-icon-mobile' : 'img-icon'" />
           Prodotti
         </button>
       </div>
 
-      <div class="col-md-3 col-sm-12">
+      <div class="col-lg-3 col-md-6 col-sm-12">
         <button mat-raised-button color="secondary" routerLink="/product-list/1" class="custom-button list">
           <img src="assets/GridLayout.png" alt="Grid View"
             [ngClass]="{ 'img-icon-mobile': isMobile, 'img-icon': !isMobile }" />
@@ -37,12 +37,18 @@
 
   <div *ngIf="!isMobile" class="row">
     <div class="col-lg-6">
+      <app-title>
+        <h2>Statistiche</h2>
+      </app-title>
       <div class="px-3">
         <app-chart [hasTitle]="false"></app-chart>
       </div>
     </div>
 
     <div class="col-lg-6">
+      <app-title>
+        <h2>Prodotti</h2>
+      </app-title>
       <div class="px-3">
         <app-products-list [hasTitle]="false" [pageSize]="8"></app-products-list>
       </div>
