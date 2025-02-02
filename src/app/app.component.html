@@ -5,7 +5,7 @@
       <button mat-icon-button (click)="isSidebarOpen = !isSidebarOpen">
         <mat-icon>menu</mat-icon>
       </button>
-      <span>SweetShop</span>
+      <span>{{store?.name}}</span>
       <span class="spacer"></span>
       <button mat-icon-button routerLink="/dashboard" title="Dashboard">
         <mat-icon>dashboard</mat-icon>
@@ -16,6 +16,20 @@
       <button mat-icon-button routerLink="/statistics" title="Statistiche">
         <mat-icon>assessment</mat-icon>
       </button>
+      <button mat-icon-button [matMenuTriggerFor]="userMenu" title="User">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+
+      <div *ngIf="nomeImpiegato && !isMobile">
+        <span>Ciao, {{ nomeImpiegato }}!</span>
+      </div>
+      <mat-menu #userMenu="matMenu">
+        <button mat-menu-item *ngFor="let employee of store?.employees" (click)="selectEmployee(employee)">
+          {{ employee }}
+        </button>
+      </mat-menu>
+
+
     </mat-toolbar>
     <mat-sidenav #sidenav mode="side" [opened]="isSidebarOpen" class="sidenav">
       <mat-nav-list>
@@ -37,7 +51,7 @@
         </a>
       </mat-nav-list>
     </mat-sidenav>
-    <div class="content content-wrapper" [ngClass]="{'opened': isSidebarOpen}">
+    <div *ngIf="store" class="content content-wrapper" [ngClass]="{'opened': isSidebarOpen}">
       <router-outlet></router-outlet>
     </div>
   </mat-sidenav-content>

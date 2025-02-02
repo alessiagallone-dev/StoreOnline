@@ -73,7 +73,7 @@
 
         <div class="d-flex justify-content-between">
           <button mat-raised-button color="primary" *ngIf="!isEditing" (click)="toggleEdit()" [disabled]="!isAdd"
-            [title]="!isAdd ? 'ToDo' : 'Salva Prodotto'">Salva</button>
+            [title]="!isAdd ? 'Non è possibile modificare' : 'Salva Prodotto'">Salva</button>
           <button mat-raised-button color="accent" *ngIf="isEditing" (click)="toggleEdit()">Modifica</button>
 
           <button mat-stroked-button color="warn" type="button" routerLink="/dashboard"

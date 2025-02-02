@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ProductService } from "./../../core/services/product.service";
 import { Product } from "./../../models/product.model";
@@ -25,35 +25,55 @@ export class ProductDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private productService: ProductService,
     private fb: FormBuilder,
-    private _dialog: MatDialog
+    private _dialog: MatDialog,
+    private _router: Router
   ) { }
 
   ngOnInit() {
     const productId = this.route.snapshot.paramMap.get("id");
-    this.isEditing = productId && productId !== "0";
+    this.isEditing = !(productId === "0");
     if (this.isEditing) {
       this.isEditing = true;
-      this.productService.getProductById(productId).subscribe({
-        next: (product) => {
-          this.product = product;
-          this.createForm(product);
+
+      this.productService.getProductById(productId).subscribe(
+        (product) => {
+          if (product) {
+            this.product = product;
+            this.createForm(product);
+          } else {
+            this.openModaleErrore();
+          }
         },
-        error: (error) => {
-          this._dialog.open(ModalComponent, {
-            data: {
-              message: `${error.message}`,
-              title: 'Attenzione'
-            },
-            panelClass: 'error'
-          });
-          console.error("Errore recupero dettaglio prodotto", error);
-        },
-      });
+        (error) => {
+          this.openModaleErrore();
+        }
+      );
     } else {
       this.isAdd = true;
       this.createForm();
     }
   }
+
+
+  openModaleErrore() {
+    this.isLoading = false;
+    const dialogRef = this._dialog.open<ModalComponent, DialogData, any>(ModalComponent, {
+      data: {
+        message: `Errore recupero dettaglio prodotto.`,
+        title: 'Attenzione',
+        confirmText: 'Ritorna al panello prodotti'
+      },
+      panelClass: 'error'
+    });
+
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this._router.navigate(['/product-list']);
+      }
+    });
+  }
+
 
   aggiungiNuovo() {
     this.isAdd = true;

@@ -1,6 +1,8 @@
 import { Component } from "@angular/core";
 import { ScreenSizeService } from "./screen-size.service";
 import { Subscription } from "rxjs";
+import { ProductService } from "./core/services/product.service";
+import { StoreItem } from "./models/product.model";
 
 @Component({
   selector: "app-root",
@@ -10,17 +12,30 @@ import { Subscription } from "rxjs";
 export class AppComponent {
   title = "backoffice-store-online";
   isSidebarOpen = true;
+  store: StoreItem;
 
   isMobile: boolean = false;
+  nomeImpiegato: string;
+
   private _screenSizeSubscription: Subscription;
 
-  constructor(private _screenSizeService: ScreenSizeService) { }
+  constructor(
+    private _screenSizeService: ScreenSizeService,
+    private _productService: ProductService) { }
 
 
-  ngOnInit() {
+  async ngOnInit() {
     this._screenSizeSubscription = this._screenSizeService.screenWidth$.subscribe(width => {
       this.isMobile = this._screenSizeService.isMobile();
       this.isSidebarOpen = this.isMobile === false;
     });
+
+    this._productService.idStore$.subscribe(async idStore => {
+      this.store = await this._productService.getMyStore(idStore).toPromise();
+    });
+  }
+
+  public selectEmployee(nomeImpiegato: string) {
+    this.nomeImpiegato = nomeImpiegato;
   }
 }

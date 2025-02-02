@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { catchError, filter, map, switchMap, take } from 'rxjs/operators';
-import { Product, StatisticheList, StoreListItem, } from 'src/app/models/product.model';
+import { Product, StatisticheList, StoreItem, } from 'src/app/models/product.model';
 
 @Injectable({
   providedIn: 'root',
@@ -10,15 +10,70 @@ import { Product, StatisticheList, StoreListItem, } from 'src/app/models/product
 export class ProductService {
   private readonly baseUrl: string = 'https://techops-eurisit-fe-test.azurewebsites.net/api/stores';
 
-  private idStoreSubject = new BehaviorSubject<string | null>('ijpxNJLM732vm8AeajMR');
+  private idStoreSubject = new BehaviorSubject<string>('ijpxNJLM732vm8AeajMR');
   idStore$ = this.idStoreSubject.asObservable();
 
   constructor(private http: HttpClient) {
     this.loadMyStore();
   }
 
+  getMyStore(idStore: string): Observable<StoreItem> {
+    return this.http.get<StoreItem>(`${this.baseUrl}/${idStore}`).pipe(
+      catchError(error => {
+        this.handleError(error);
+        return of(null);
+      })
+    );
+  }
+
+  getProducts(page: number = 1, elements: number = 100): Observable<any> {
+    return this.ensureStoreId().pipe(
+      switchMap((idStore) =>
+        this.http.get<any>(`${this.baseUrl}/${idStore}/products?page=${page}&elements=${elements}`)
+      )
+    );
+  }
+
+  getProductById(idProduct: string): Observable<Product> {
+    return this.ensureStoreId().pipe(
+      switchMap((idStore) =>
+        this.http.get<Product>(`${this.baseUrl}/${idStore}/products/${idProduct}`).pipe(
+          catchError(error => {
+            this.handleError(error);
+            return of(null);
+          })
+        )
+      )
+    );
+  }
+
+  createProduct(product: Product): Observable<any> {
+    return this.ensureStoreId().pipe(
+      switchMap((idStore) =>
+        this.http.post<any>(`${this.baseUrl}/${idStore}/products`, product, { responseType: 'text' as 'json' }).pipe(
+          catchError((err) => {
+            console.error('Errore durante la creazione del prodotto:', err);
+            return throwError(() => new Error('Errore durante la creazione del prodotto'));
+          })
+        )
+      )
+    );
+  }
+
+  deleteProduct(productId: string): Observable<void> {
+    return this.ensureStoreId().pipe(
+      switchMap((idStore) => this.http.delete<void>(`${this.baseUrl}/${idStore}/products/${productId}`))
+    );
+  }
+
+  getStatisticheCategoria(): Observable<StatisticheList[]> {
+    return this.ensureStoreId().pipe(
+      switchMap((idStore) => this.http.get<any>(`${this.baseUrl}/${idStore}/stats/categories`))
+    );
+  }
+
   private loadMyStore() {
-    this.http.get<StoreListItem[]>(this.baseUrl)
+    this.http.get<StoreItem[]>(this.baseUrl)
       .pipe(
         map((stores) => {
           if (stores.length === 0) {
@@ -54,58 +109,17 @@ export class ProductService {
     );
   }
 
-  getAllStores(): Observable<StoreListItem[]> {
-    return this.http.get<StoreListItem[]>(this.baseUrl);
+  private handleError(error: any) {
+    switch (error.code) {
+      case 'PRODUCT_NOT_FOUND':
+        console.error('Prodotto non trovato:', error.error.message);
+        break;
+      case 'STORE_NOT_FOUND':
+        console.error('Negozio non trovato:', error.error.message);
+        break;
+      default:
+        console.error('Errore:', error);
+        break;
+    }
   }
-
-  /// Gestione Porodotti
-  getProducts(page: number = 1, elements: number = 100): Observable<any> {
-    return this.ensureStoreId().pipe(
-      switchMap((idStore) =>
-        this.http.get<any>(`${this.baseUrl}/${idStore}/products?page=${page}&elements=${elements}`)
-      )
-    );
-  }
-
-  getProductById(idProduct: string): Observable<Product> {
-    return this.ensureStoreId().pipe(
-      switchMap((idStore) =>
-        this.http.get<Product>(`${this.baseUrl}/${idStore}/products/${idProduct}`)
-      )
-    );
-  }
-
-  createProduct(product: Product): Observable<any> {
-    return this.ensureStoreId().pipe(
-      switchMap((idStore) =>
-        this.http.post<any>(`${this.baseUrl}/${idStore}/products`, product, {
-          responseType: 'text' as 'json'
-        }).pipe(
-          catchError((err) => {
-            console.error('Errore durante la creazione del prodotto:', err);
-            return throwError(() => new Error('Errore durante la creazione del prodotto'));
-          })
-        )
-      )
-    );
-  }
-
-  deleteProduct(productId: string): Observable<void> {
-    return this.ensureStoreId().pipe(
-      switchMap((idStore) =>
-        this.http.delete<void>(`${this.baseUrl}/${idStore}/products/${productId}`)
-      )
-    );
-  }
-  /// Fine Gestione Porodotti
-
-  /// Gestione Statistiche
-  getStatisticheCategoria(): Observable<StatisticheList[]> {
-    return this.ensureStoreId().pipe(
-      switchMap((idStore) =>
-        this.http.get<any>(`${this.baseUrl}/${idStore}/stats/categories`)
-      )
-    );
-  }
-  /// Fine Gestione Statistiche
 }

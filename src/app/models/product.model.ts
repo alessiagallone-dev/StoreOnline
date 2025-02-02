@@ -29,7 +29,7 @@ export class Store {
   ) { }
 }
 
-export class StoreListItem {
+export class StoreItem {
   constructor(
     public id: string,
     public data: Store
